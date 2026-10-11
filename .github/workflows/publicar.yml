@@ -1,0 +1,31 @@
+# Une las partes de instalador/ (GitHub no acepta archivos de más de 100 MB en el repositorio),
+# comprueba el SHA-256 y publica el instalador como Release «Refresh-Instalador.exe».
+# refresh.do/descargar enlaza a releases/latest/download/Refresh-Instalador.exe.
+name: Publicar instalador
+on:
+  push:
+    branches: [main]
+    paths: ["instalador/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unir y comprobar
+        run: |
+          cat instalador/Refresh-Instalador.exe.part* > Refresh-Instalador.exe
+          echo "$(cat instalador/SHA256)  Refresh-Instalador.exe" | sha256sum -c -
+      - name: Publicar Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v="v$(cat instalador/VERSION)"
+          if gh release view "$v" >/dev/null 2>&1; then
+            gh release upload "$v" Refresh-Instalador.exe --clobber
+          else
+            gh release create "$v" Refresh-Instalador.exe --title "Refresh $(cat instalador/VERSION) para Windows" \
+              --notes "Instalador de Refresh para Windows 10 y 11 (64 bits). Página de descarga: https://refresh.do/descargar" --latest
+          fi
