@@ -1,0 +1,30 @@
+# Publica Refresh Mudanza (mudanza/): el instalador de Windows y la extensión del navegador, en el Release fijo
+# «mudanza». No se marca como el último: «latest» sigue siendo el programa de Refresh, que es lo que baja /descargar.
+# refreshtaller.com/mudanza enlaza a releases/download/mudanza/<archivo>.
+name: Publicar Mudanza
+on:
+  push:
+    branches: [main]
+    paths: ["mudanza/**", ".github/workflows/publicar-mudanza.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comprobar
+        working-directory: mudanza
+        run: sha256sum -c SHA256
+      - name: Publicar Release
+        working-directory: mudanza
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view mudanza >/dev/null 2>&1; then
+            gh release create mudanza --title "Refresh Mudanza" --latest=false \
+              --notes "Trae tus clientes, artículos e inventario de cualquier programa a Refresh. Programa para Windows 10 y 11 y extensión para Chrome y Edge. Página: https://refreshtaller.com/mudanza"
+          fi
+          gh release upload mudanza Refresh-Mudanza-Instalador.exe Refresh-Mudanza-Extension.zip --clobber
+          gh release edit mudanza --title "Refresh Mudanza $(cat VERSION)"
