@@ -22,3 +22,15 @@ Release fijo `mudanza`, sin marcarlo como el último.
 
 Los dos archivos salen del workflow «Mudanza (Windows y extensión)» del repositorio de Refresh, que los
 compila y los prueba en Windows: para una versión nueva se copian aquí con su `SHA256` y su `VERSION`.
+
+## Refresh para Android (APK)
+
+`movil/Refresh.apk` es la app de Android para instalar sin pasar por Google Play, con su `VERSION` y su `SHA256`. Es la
+misma app, firmada con la misma clave; como no viene de una tienda, el plan se paga con tarjeta adentro, igual que en la web.
+
+**Descargar:** https://refreshtaller.com/app-movil
+
+- https://github.com/adamrguez/refresh-descargas/raw/main/movil/Refresh.apk
+
+Sale del workflow «Móvil (Android y iPhone)» del repositorio de Refresh (artefacto `Refresh-Android-directa`), que lo
+arma y lo firma en `main`: para una versión nueva se copia aquí con su `SHA256` y su `VERSION`.
